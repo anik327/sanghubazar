@@ -1,4 +1,5 @@
 from itertools import product
+from unicodedata import category
 from store.pagination import DefaultPagination
 from django.db.models.aggregates import Count
 from django.shortcuts import get_object_or_404
@@ -14,8 +15,8 @@ from rest_framework import status
 
 from store.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .filters import ProductFilter
-from .models import CartItem, Collection, Product, Review, Cart, Customer, Order, ProductImage
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductImageSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer, UpdateOrderSerializer
+from .models import CartItem, Category, Product, Review, Cart, Customer, Order, ProductImage
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductImageSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer, UpdateOrderSerializer
 from store import serializers
 
 
@@ -40,17 +41,17 @@ class ProductViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CollectionViewSet(ModelViewSet):
-    queryset = Collection.objects.annotate(
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.annotate(
         products_count=Count('products')).all()
-    serializer_class = CollectionSerializer
+    serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
 
     def delete(self, request, pk):
-        collection = get_object_or_404(Collection, pk=pk)
-        if collection.products.count() > 0:
-            return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        collection.delete()
+        category = get_object_or_404(category, pk=pk)
+        if category.products.count() > 0:
+            return Response({'error': 'Category cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

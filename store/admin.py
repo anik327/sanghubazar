@@ -32,21 +32,21 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    autocomplete_fields = ['collection']
+    autocomplete_fields = ['category']
     prepopulated_fields = {
         'slug': ['title']
     }
     actions = ['clear_inventory']
     list_display = ['title', 'unit_price',
-                    'inventory_status', 'collection_title']
+                    'inventory_status', 'category_title']
     list_editable = ['unit_price']
-    list_filter = ['collection', 'last_update', InventoryFilter]
+    list_filter = ['category', 'last_update', InventoryFilter]
     list_per_page = 10
-    list_select_related = ['collection']
+    list_select_related = ['category']
     search_fields = ['title']
 
-    def collection_title(self, product):
-        return product.collection.title
+    def category_title(self, product):
+        return product.category.title
 
     @admin.display(ordering='inventory')
     def inventory_status(self, product):
@@ -69,21 +69,21 @@ class ProductAdmin(admin.ModelAdmin):
         }
 
 
-@admin.register(models.Collection)
-class CollectionAdmin(admin.ModelAdmin):
+@admin.register(models.Category)
+class CategoryAdmin(admin.ModelAdmin):
     autocomplete_fields = ['featured_product']
     list_display = ['title', 'products_count']
     search_fields = ['title']
 
     @admin.display(ordering='products_count')
-    def products_count(self, collection):
+    def products_count(self, category):
         url = (
             reverse('admin:store_product_changelist')
             + '?'
             + urlencode({
-                'collection__id': str(collection.id)
+                'category__id': str(category.id)
             }))
-        return format_html('<a href="{}">{} Products</a>', url, collection.products_count)
+        return format_html('<a href="{}">{} Products</a>', url, category.products_count)
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(

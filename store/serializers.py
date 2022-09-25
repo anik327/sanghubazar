@@ -2,14 +2,14 @@
 from dataclasses import field
 from decimal import Decimal
 from django.db import transaction
-from .models import Cart, CartItem, Customer, Order, OrderItem, Product, Collection, ProductImage, Review
+from .models import Cart, CartItem, Customer, Order, OrderItem, Product, Category, ProductImage, Review
 from .signals import order_created
 from rest_framework import serializers
 
 
-class CollectionSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Collection
+        model = Category
         fields = ['id', 'title', 'products_count']
 
     products_count = serializers.IntegerField(read_only=True)
@@ -19,7 +19,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         product_id = self.context['product_id']
         return ProductImage.objects.create(product_id=product_id, **validated_data)
-    
+
     class Meta:
         model = ProductImage
         fields = ['id', 'image']
@@ -27,10 +27,11 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Product
         fields = ['id', 'title', 'description', 'slug', 'inventory',
-                  'unit_price', 'price_with_tax', 'collection', 'images']
+                  'unit_price', 'price_with_tax', 'category', 'images']
 
     price_with_tax = serializers.SerializerMethodField(
         method_name='calculate_tax')
@@ -139,6 +140,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'customer', 'placed_at', 'payment_status', 'items']
 
+
 class UpdateOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
@@ -151,7 +153,7 @@ class CreateOrderSerializer(serializers.Serializer):
     def validate_cart_id(self, cart_id):
         if not Cart.objects.filter(pk=cart_id).exists():
             raise serializers.ValidationError('No cart with the give cart id.')
-        if CartItem.objects.filter(cart_id=cart_id).count()==0:
+        if CartItem.objects.filter(cart_id=cart_id).count() == 0:
             raise serializers.ValidationError('The cart is empty.')
         return cart_id
 
@@ -178,4 +180,3 @@ class CreateOrderSerializer(serializers.Serializer):
             order_created.send_robust
 
             return order
-
