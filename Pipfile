@@ -16,9 +16,13 @@ pillow = "*"
 django-cors-headers = "*"
 django-templated-mail = "*"
 redis = "*"
+whitenoise = "*"
+gunicorn = "*"
+dj-database-url = "*"
 
 [dev-packages]
 autopep8 = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.10"
