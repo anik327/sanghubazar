@@ -3,7 +3,6 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from uuid import uuid4
-
 from store import permissions, validators
 
 
@@ -14,6 +13,8 @@ class Promotion(models.Model):
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
+    icon = models.ImageField(upload_to='store/images/category',
+                             validators=[validators.validate_file_size], null=True, blank=True)
     featured_product = models.ForeignKey(
         'Product', on_delete=models.SET_NULL, null=True, related_name='+', blank=True)
 
@@ -35,7 +36,7 @@ class Product(models.Model):
     inventory = models.IntegerField(validators=[MinValueValidator(0)])
     last_update = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(
-        Category, on_delete=models.PROTECT, related_name='products')
+        Category, on_delete=models.PROTECT, related_name='products', null=True, blank=True)
     promotions = models.ManyToManyField(Promotion, blank=True)
 
     def __str__(self) -> str:

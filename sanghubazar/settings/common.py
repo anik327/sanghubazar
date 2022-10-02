@@ -21,9 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 
-
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +34,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'djoser',
+    'mptt',
     'playground',
     'debug_toolbar',
     'store',
@@ -90,9 +88,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sanghubazar.wsgi.application'
-
-
-
 
 
 # Password validation
@@ -169,27 +164,26 @@ EMAIL_PORT = 2525
 DEFAULT_FROM_EMAIL = 'mail@sanghubazar.com'
 
 
-
 LOGGING = {
-    'version' : 1,
+    'version': 1,
     'disable_existing_loggers': False,
-    'handlers' : {
-        'console':{
+    'handlers': {
+        'console': {
             'class': 'logging.StreamHandler'
         },
-        'file':{
+        'file': {
             'class': 'logging.FileHandler',
             'filename': 'general.log'
         }
     },
-    'loggers':{
-        '':{
-            'handlers':['console', 'file'],
+    'loggers': {
+        '': {
+            'handlers': ['console', 'file'],
             'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO')
         }
     },
-    'formatters':{
-        'verbose':{
+    'formatters': {
+        'verbose': {
             'format': '{asctime} ({levelname}) - {name} - {message}',
             'style': '{'
         }
