@@ -6,12 +6,12 @@ from .common import *
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ['DEBUG', 'False'] == 'True'
 
 
-ALLOWED_HOSTS = ['https://sanghubazar.ondigitalocean.app']
+ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
 
 
 DATABASES = {
-    'default': dj_database_url.config()
+    'default': dj_database_url.parse(os.environ.get["DATABASE_URL"]),
 }
