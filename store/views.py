@@ -42,7 +42,8 @@ class ProductViewSet(ModelViewSet):
 
 
 class CategoryViewSet(ModelViewSet):
-    queryset = Category.objects.annotate(products_count=Count('products')).all()
+    queryset = Category.objects.annotate(
+        products_count=Count('products')).filter(parent__isnull=True)
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
 

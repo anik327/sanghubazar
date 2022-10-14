@@ -5,12 +5,16 @@ from django.db import transaction
 from .models import Cart, CartItem, Customer, Order, OrderItem, Product, Category, ProductImage, Review
 from .signals import order_created
 from rest_framework import serializers
+from rest_framework_recursive.fields import RecursiveField
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    children = RecursiveField(many=True)
+
     class Meta:
         model = Category
-        fields = ['id', 'title', 'icon', 'products_count']
+        fields = ['id', 'title', 'parent',
+                  'icon', 'children', 'products_count']
 
     products_count = serializers.IntegerField(read_only=True)
 

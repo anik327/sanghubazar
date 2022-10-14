@@ -14,17 +14,19 @@ djoser = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
 django-cors-headers = "*"
-django-templated-mail = "*"
 redis = "*"
 whitenoise = "*"
 gunicorn = "*"
 dj-database-url = "*"
 django-mptt = "*"
 django-silk = "*"
+djangorestframework-recursive = "*"
+django-cleanup = "*"
 
 [dev-packages]
 autopep8 = "*"
 pytest = "*"
+django-templated-mail = "*"
 
 [requires]
 python_version = "3.10"

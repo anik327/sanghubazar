@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from uuid import uuid4
+from mptt.models import MPTTModel, TreeForeignKey
 from store import permissions, validators
 
 
@@ -11,18 +12,20 @@ class Promotion(models.Model):
     discount = models.FloatField()
 
 
-class Category(models.Model):
+class Category(MPTTModel):
     title = models.CharField(max_length=255)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE,
+                            null=True, blank=True, related_name='children')
     icon = models.ImageField(upload_to='store/images/category',
                              validators=[validators.validate_file_size], null=True, blank=True)
     featured_product = models.ForeignKey(
         'Product', on_delete=models.SET_NULL, null=True, related_name='+', blank=True)
 
+    class MPTTMeta:
+        order_insertion_by = ['title']
+
     def __str__(self) -> str:
         return self.title
-
-    class Meta:
-        ordering = ['title']
 
 
 class Product(models.Model):
