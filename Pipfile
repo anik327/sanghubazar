@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 django = "*"
-django-debug-toolbar = "*"
+
 psycopg2 = "*"
 djangorestframework = "*"
 drf-nested-routers = "*"
@@ -24,6 +24,7 @@ djangorestframework-recursive = "*"
 django-cleanup = "*"
 
 [dev-packages]
+django-debug-toolbar = "*"
 autopep8 = "*"
 pytest = "*"
 django-templated-mail = "*"
