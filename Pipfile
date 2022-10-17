@@ -24,7 +24,6 @@ djangorestframework-recursive = "*"
 django-cleanup = "*"
 
 [dev-packages]
-
 autopep8 = "*"
 pytest = "*"
 django-templated-mail = "*"
