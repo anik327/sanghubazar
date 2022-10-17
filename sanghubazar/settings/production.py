@@ -15,6 +15,3 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 DATABASES = {
     "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
 }
-# DATABASES = {
-#     'default': dj_database_url.parse(os.environ.get('DATABASE_URL')),
-# }
